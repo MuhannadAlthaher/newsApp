@@ -11,17 +11,29 @@ const NewsCounter = ({}) => {
   const GetAPIlocation = async () => {
     try {
       const res = await axios.get(
-        `https://newsapi.org/v2/everything?q=tesla&from=2024-11-16&sortBy=publishedAt&apiKey=231cd4064bfa475496f764f8bfa68d9b`
+        `https://newsapi.org/v2/everything?q=apple&from=2024-12-15&to=2024-12-15&sortBy=popularity&apiKey=231cd4064bfa475496f764f8bfa68d9b`
       );
-      setArticles(res.data.articles.slice(0,6)); 
-      // const articles = res.data.articles;
-      // const title= articles.map((article)=>article.author)
-      // console.log(title)
+    
+      if (res.data.articles && res.data.articles.length > 0) {
+        const validArticles = res.data.articles.filter(
+          (article) =>
+            article.title && 
+            article.description &&
+            article.urlToImage&&
+            article.urlToImage !== null &&
+            !article.title.includes("[Removed]") && 
+            !article.description.includes("[Removed]") 
+        );
+    
+        setArticles(validArticles.slice(0, 6));
+      } else {
+        console.log("No valid articles found");
+        setArticles([]); 
+      }
     } catch (err) {
-      console.error('Error fetching data:', err?.message
-
-      );
+      console.error("Error fetching data:", err.message || err);
     }
+    
   };
   
    const handlerefrish=async()=>{

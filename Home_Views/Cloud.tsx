@@ -14,7 +14,16 @@ const NewsCloudCounter = ({}) => {
     useEffect(() => {
       const fetchData = async () => {
         const data = await fetchNewsTech();
-        setArticles(data.articles.slice(0,6)); 
+        const valdation = data.articles.filter(
+          (article) =>
+            article.title && 
+            article.description &&
+            article.urlToImage&&
+            article.urlToImage !== null &&
+            !article.title.includes("[Removed]") && 
+            !article.description.includes("[Removed]") 
+        )
+        setArticles(valdation.slice(0,6));
        
       };
       fetchData();
