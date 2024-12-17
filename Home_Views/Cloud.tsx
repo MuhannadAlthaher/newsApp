@@ -23,7 +23,7 @@ const NewsCloudCounter = ({}) => {
             !article.title.includes("[Removed]") && 
             !article.description.includes("[Removed]") 
         )
-        setArticles(valdation.slice(0,6));
+        setArticles(valdation);
        
       };
       fetchData();
@@ -41,7 +41,8 @@ const NewsCloudCounter = ({}) => {
             </View>
         );
     }}    
-        data={articles} 
+        data={articles}
+        initialNumToRender={2}
         keyExtractor={(item) => item.url}
         renderItem={({ item }) => (
             <TouchableOpacity  onPress={() => navigation.navigate('Contant',{

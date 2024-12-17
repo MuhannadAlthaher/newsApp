@@ -1,63 +1,96 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoritesContext } from '../store/context/favorite-news';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/redux/Login';
+import { PixelRatio } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
-const Profile = () => {
-    const { favoriteitems,removFavorite } = useContext(FavoritesContext);
-    const user = useSelector((state:RootState) => state.login.user);
-    // const users = user.map(
-    //     (users) => users === user.username
-    //   );
+const Profile = ({navigation}) => {
+    const handleLogout = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'LoginScreen' }], 
+            })
+        );
+    };
+const size=Dimensions.get('screen')/2
+    const scaleFontSize = (size) => {
+        const scale = PixelRatio.getFontScale();
+        return size * scale;
+    };
+
+    const scaleSize = (size) => {
+        const scale = PixelRatio.get();
+        return size * scale;
+    };
+
+    const { favoriteitems, removFavorite } = useContext(FavoritesContext);
+    const user = useSelector((state: RootState) => state.login.user);
+
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Account</Text>
+            <Text style={[styles.text, { fontSize: scaleFontSize(20) }]}>Account</Text>
             <View style={styles.profileContant}>
-                <View style={styles.profilCountainer}>
+                <View style={[styles.profilCountainer, { height: scaleSize(16), width: scaleSize(16) }]}>
                     <Image
-                        style={styles.imageStyle}
+                        style={[styles.imageStyle, { height: scaleSize(10), width: scaleSize(10) }]}
                         source={require('../assets/person-outline.png')}
                     />
                 </View>
                 <View style={styles.nameAndSpicalization}>
-                    <Text style={styles.userName}>{user.username}</Text>
-                    <Text style={styles.spicalization}>Software Developer</Text>
+                    <Text style={[styles.userName, { fontSize: scaleFontSize(16) }]}>{user.username}</Text>
+                    <Text style={[styles.spicalization, { fontSize: scaleFontSize(15) }]}>Software Developer</Text>
                 </View>
             </View>
+            <View style={styles.contentContainer}>
+            <Text style={[styles.text, { fontSize: scaleFontSize(16) }]}>Favorite</Text>
 
-            <Text style={styles.text}>Favorite</Text>
-           
-            {favoriteitems.length > 0 ? (
-                <FlatList
-                    data={favoriteitems}
-                    
-                    keyExtractor={(item, index) => index.toString()} 
-                    renderItem={({ item }) => (
-                        <View style={styles.inSideStyle}>
-                            <Image
-                                source={{ uri: item.image }}
-                                style={styles.imageStyle}
-                            />
-                            <View style={styles.NewsAndAuthor}>
-                                <Text style={styles.authorName}>{item.auth || 'Unknown Author'}</Text>
-                                <Text style={styles.textStyle}>{item.title}</Text>
-                            </View>
-                            
-
-                           <FontAwesome6 name='trash' size={35} color={'#EF3B42'} onPress={()=>removFavorite(item.auth)}/>
-
-                        </View>
-                    )}
+{favoriteitems.length > 0 ? (
+    <FlatList
+        data={favoriteitems}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+            <View style={styles.inSideStyle}>
+                <Image
+                    source={{ uri: item.image }}
+                    style={[styles.imageStyle, { height: scaleSize(16), width: scaleSize(16) }]}
                 />
-            ) : (
-                <Text style={styles.emptyMessage}>No favorite items yet!</Text>
-            )}
+                <View style={styles.NewsAndAuthor}>
+                    <Text style={[styles.authorName, { fontSize: scaleFontSize(12), marginTop: scalePadding(7)}]}>{item.auth || 'Unknown Author'}</Text>
+                    <Text style={[styles.textStyle, { fontSize: scaleFontSize(15) }]}>{item.title}</Text>
+                </View>
+
+                <FontAwesome6
+                    name='trash'
+                    size={scaleFontSize(20)}
+                    color={'#EF3B42'}
+                    onPress={() => removFavorite(item.auth)}
+                />
+            </View>
+        )}
+    />
+) : (
+    <Text style={[styles.emptyMessage, { fontSize: scaleFontSize(16),        paddingBottom:scalePadding(60),
+    }]}>No favorite items yet!</Text>
+)}
+
+            </View>
+
+            <TouchableOpacity onPress={handleLogout}>
+                <View style={[styles.logOutButton, { height: scaleSize(16), width: scaleSize(100),marginBottom: scalePadding(3) }]}>
+                    <Text style={[styles.logoutText, { fontSize: scaleFontSize(25) }]}>Logout</Text>
+                </View>
+            </TouchableOpacity>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     authorName: {
@@ -69,10 +102,17 @@ const styles = StyleSheet.create({
     textStyle: {
         color: '#ffffff',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 15,
         maxWidth: '70%',
         flexShrink: 1,
         overflow: 'hidden',
+    },
+    contentContainer: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     container: {
         flex: 1,
@@ -85,7 +125,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     text: {
-        fontSize: 25,
+        fontSize: 20,
         color: '#fff',
         fontWeight: 'bold',
         marginRight: '70%',
@@ -128,13 +168,27 @@ const styles = StyleSheet.create({
         width:400,
         backgroundColor: '#222222',
         borderRadius: 8,
-        padding: 8,
+        padding: 10,
     },
     emptyMessage: {
+        
         fontSize: 16,
         color: '#A9A9A9',
         marginTop: 20,
     },
+    logOutButton:{
+        
+        alignItems: 'center',
+        justifyContent:'center',
+        borderRadius:8,
+        backgroundColor:'#fff',
+        height:50,
+        width:255,
+    },logoutText:{
+        color:'red',
+        fontSize:25,
+        fontWeight:'bold'
+    }
 });
 
 export default Profile;

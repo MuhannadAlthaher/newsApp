@@ -22,7 +22,8 @@ const FirstRoute = ({ navigation }: HomeScreenProps) =>{
 
   
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView  >
+      <ScrollView  showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}>
         
         <View style={[styles.scene]}>
         <ImageSlider/>
@@ -42,7 +43,8 @@ const FirstRoute = ({ navigation }: HomeScreenProps) =>{
 const SecondRoute = () => (
   
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <ScrollView  >
+    <ScrollView showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false} >
       <View style={[styles.scene]}>
       <ImageSlider/>
         {/* <Image style={styles.imageStyle} source={require('../assets/Card.png')} /> */}
@@ -58,7 +60,8 @@ const SecondRoute = () => (
 );
 const TehrdRoute =()=>(
   <GestureHandlerRootView style={{ flex: 1 }}>
-    <ScrollView  >
+    <ScrollView showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false} >
       <View style={[styles.scene]}>
       <ImageSlider/>
         {/* <Image style={styles.imageStyle} source={require('../assets/Card.png')} /> */}

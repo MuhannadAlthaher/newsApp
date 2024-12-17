@@ -17,8 +17,7 @@ const Drawer = createDrawerNavigator();
 function DrawerNavigation() {
   return (
     <Drawer.Navigator
-      
-      screenOptions={{
+        screenOptions={{
         headerTintColor: '#fff',
         headerStyle: {
           backgroundColor: '#171717',
@@ -57,7 +56,7 @@ function App() {
             options={{ headerShown: false }}
           />
            <Stack.Screen
-            name="Prfile"
+            name="Profile"
             component={Profile}
             options={{ headerShown: false }}
           />

@@ -1,6 +1,7 @@
 import { TouchableOpacity, Text, StyleSheet ,Alert} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logIn } from '../store/redux/Login';
+import { CommonActions } from '@react-navigation/native';
 
 const LoginButton = ({ navigation,username, password }) => {
 
@@ -9,7 +10,14 @@ const LoginButton = ({ navigation,username, password }) => {
    
 
     if (username === 'admin' && password === 'admin') {
-      navigation.navigate("DrawerNavigation");
+     
+      navigation.dispatch(
+        CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'DrawerNavigation' }], 
+        })
+    );
+
       dispatch(logIn({username}))
     } else {
    
